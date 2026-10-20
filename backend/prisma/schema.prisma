@@ -64,6 +64,15 @@ model User {
   officerAssignments OfficerAssignment[]
   advisoriesSet      TrailAdvisory[]
 
+  bookings          Booking[]        @relation("BookingLeader")
+  memberCheckins    BookingMember[]  @relation("MemberCheckin")
+  memberCheckouts   BookingMember[]  @relation("MemberCheckout")
+  scans             GateScan[]
+  refundsProcessed  RefundRequest[]
+  blacklistsCreated Blacklist[]
+  auditLogs         AuditLog[]
+  savedCompanions   SavedCompanion[]
+
   @@map("users")
 }
 
@@ -167,6 +176,10 @@ model Trail {
   checkpoints Checkpoint[]
 
   advisories TrailAdvisory[]
+
+  quotas   TrailQuota[]
+  bookings Booking[]
+  scans    GateScan[]
 
   @@index([mountainId])
   @@map("trails")
@@ -294,4 +307,237 @@ model MountainContent {
 
   @@index([mountainId, type, sortOrder])
   @@map("mountain_contents")
+}
+
+enum BookingStatus {
+  pending
+  paid
+  completed
+  expired
+  failed
+  rescheduled
+  cancelled_by_closure
+  refund_requested
+  refunded
+}
+
+enum MemberStatus {
+  not_entered
+  climbing
+  exited
+  manual_exit
+  cancelled
+  no_show
+}
+
+enum PaymentStatus {
+  pending
+  settlement
+  expire
+  cancel
+  deny
+}
+
+enum RefundStatus {
+  requested
+  refunded
+  rejected
+}
+
+enum ScanType {
+  IN  @map("in")
+  OUT @map("out")
+}
+
+enum ScanMethod {
+  qr
+  manual
+}
+
+model TrailQuota {
+  id             String    @id @default(uuid()) @db.Uuid
+  trailId        String    @map("trail_id") @db.Uuid
+  date           DateTime  @db.Date
+  totalQuota     Int       @map("total_quota")
+  sold           Int       @default(0)
+  isClosed       Boolean   @default(false) @map("is_closed")
+  priceOverride  Int?      @map("price_override")
+  bookingOpensAt DateTime? @map("booking_opens_at")
+
+  trail Trail @relation(fields: [trailId], references: [id], onDelete: Restrict)
+
+  @@unique([trailId, date])
+  @@map("trail_quotas")
+}
+
+model Booking {
+  id                  String        @id @default(uuid()) @db.Uuid
+  bookingCode         String        @unique @map("booking_code") @db.VarChar(12)
+  qrToken             String?       @unique @map("qr_token") @db.VarChar(255)
+  leaderUserId        String        @map("leader_user_id") @db.Uuid
+  trailId             String        @map("trail_id") @db.Uuid
+  climbDate           DateTime      @map("climb_date") @db.Date
+  memberCount         Int           @map("member_count")
+  totalAmount         Int           @map("total_amount")
+  status              BookingStatus @default(pending)
+  expiresAt           DateTime      @map("expires_at")
+  rescheduledCount    Int           @default(0) @map("rescheduled_count")
+  rescheduledFromDate DateTime?     @map("rescheduled_from_date") @db.Date
+  idempotencyKey      String?       @map("idempotency_key") @db.VarChar(80)
+  agreedRulesAt       DateTime?     @map("agreed_rules_at")
+  createdAt           DateTime      @default(now()) @map("created_at")
+  updatedAt           DateTime      @updatedAt @map("updated_at")
+
+  leader   User            @relation("BookingLeader", fields: [leaderUserId], references: [id], onDelete: Restrict)
+  trail    Trail           @relation(fields: [trailId], references: [id], onDelete: Restrict)
+  members  BookingMember[]
+  payments Payment[]
+  refunds  RefundRequest[]
+  scans    GateScan[]
+
+  @@unique([leaderUserId, idempotencyKey])
+  @@index([trailId, climbDate, status])
+  @@map("bookings")
+}
+
+model BookingMember {
+  id               String       @id @default(uuid()) @db.Uuid
+  bookingId        String       @map("booking_id") @db.Uuid
+  fullName         String       @map("full_name") @db.VarChar(150)
+  nik              String       @db.VarChar(16)
+  birthDate        DateTime     @map("birth_date") @db.Date
+  gender           Gender
+  emergencyContact String       @map("emergency_contact") @db.VarChar(200)
+  isForeign        Boolean      @default(false) @map("is_foreign")
+  priceApplied     Int          @map("price_applied")
+  parentLetterUrl  String?      @map("parent_letter_url") @db.VarChar(500)
+  healthLetterUrl  String?      @map("health_letter_url") @db.VarChar(500)
+  status           MemberStatus @default(not_entered)
+  checkinAt        DateTime?    @map("checkin_at")
+  checkinById      String?      @map("checkin_by") @db.Uuid
+  checkoutAt       DateTime?    @map("checkout_at")
+  checkoutById     String?      @map("checkout_by") @db.Uuid
+  checkoutNote     String?      @map("checkout_note")
+
+  booking     Booking          @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  checkinBy   User?            @relation("MemberCheckin", fields: [checkinById], references: [id])
+  checkoutBy  User?            @relation("MemberCheckout", fields: [checkoutById], references: [id])
+  scanMembers GateScanMember[]
+
+  @@index([bookingId])
+  @@index([nik])
+  @@index([status])
+  @@map("booking_members")
+}
+
+model Payment {
+  id              String        @id @default(uuid()) @db.Uuid
+  bookingId       String        @map("booking_id") @db.Uuid
+  midtransOrderId String        @unique @map("midtrans_order_id") @db.VarChar(100)
+  snapToken       String?       @map("snap_token") @db.VarChar(255)
+  method          String?       @db.VarChar(50)
+  grossAmount     Int           @map("gross_amount")
+  status          PaymentStatus @default(pending)
+  rawNotification Json?         @map("raw_notification")
+  paidAt          DateTime?     @map("paid_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+
+  @@index([bookingId])
+  @@map("payments")
+}
+
+model RefundRequest {
+  id            String       @id @default(uuid()) @db.Uuid
+  bookingId     String       @map("booking_id") @db.Uuid
+  reason        String
+  amount        Int
+  status        RefundStatus @default(requested)
+  processedById String?      @map("processed_by") @db.Uuid
+  processedAt   DateTime?    @map("processed_at")
+  createdAt     DateTime     @default(now()) @map("created_at")
+
+  booking     Booking @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  processedBy User?   @relation(fields: [processedById], references: [id])
+
+  @@map("refund_requests")
+}
+
+model GateScan {
+  id          String     @id @default(uuid()) @db.Uuid
+  bookingId   String     @map("booking_id") @db.Uuid
+  trailId     String     @map("trail_id") @db.Uuid
+  scanType    ScanType   @map("scan_type")
+  scanMethod  ScanMethod @map("scan_method")
+  scannedById String     @map("scanned_by") @db.Uuid
+  scannedAt   DateTime   @default(now()) @map("scanned_at")
+  note        String?
+
+  booking   Booking          @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  trail     Trail            @relation(fields: [trailId], references: [id])
+  scannedBy User             @relation(fields: [scannedById], references: [id])
+  members   GateScanMember[]
+
+  @@index([bookingId, scannedAt])
+  @@map("gate_scans")
+}
+
+model GateScanMember {
+  scanId   String @map("scan_id") @db.Uuid
+  memberId String @map("member_id") @db.Uuid
+
+  scan   GateScan      @relation(fields: [scanId], references: [id], onDelete: Cascade)
+  member BookingMember @relation(fields: [memberId], references: [id], onDelete: Restrict)
+
+  @@id([scanId, memberId])
+  @@map("gate_scan_members")
+}
+
+model Blacklist {
+  id          String    @id @default(uuid()) @db.Uuid
+  nik         String    @db.VarChar(16)
+  fullName    String    @map("full_name") @db.VarChar(150)
+  reason      String
+  startDate   DateTime  @map("start_date") @db.Date
+  endDate     DateTime? @map("end_date") @db.Date
+  createdById String    @map("created_by") @db.Uuid
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  createdBy User @relation(fields: [createdById], references: [id])
+
+  @@index([nik])
+  @@map("blacklists")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  actorId    String?  @map("actor_id") @db.Uuid
+  action     String   @db.VarChar(100)
+  targetType String?  @map("target_type") @db.VarChar(50)
+  targetId   String?  @map("target_id") @db.Uuid
+  detail     Json?
+  ipAddress  String?  @map("ip_address") @db.VarChar(45)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  actor User? @relation(fields: [actorId], references: [id])
+
+  @@index([actorId, createdAt])
+  @@map("audit_logs")
+}
+
+model SavedCompanion {
+  id               String   @id @default(uuid()) @db.Uuid
+  userId           String   @map("user_id") @db.Uuid
+  fullName         String   @map("full_name") @db.VarChar(150)
+  nik              String   @db.VarChar(16)
+  birthDate        DateTime @map("birth_date") @db.Date
+  gender           Gender
+  emergencyContact String   @map("emergency_contact") @db.VarChar(200)
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("saved_companions")
 }
