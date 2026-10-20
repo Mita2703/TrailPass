@@ -59,6 +59,11 @@ model User {
   profile          ClimberProfile?  @relation("ProfileOwner")
   verifiedProfiles ClimberProfile[] @relation("ProfileVerifier")
 
+  organizerOf        MountainOrganizer[] @relation("OrganizerUser")
+  organizerAssigned  MountainOrganizer[] @relation("OrganizerAssigner")
+  officerAssignments OfficerAssignment[]
+  advisoriesSet      TrailAdvisory[]
+
   @@map("users")
 }
 
@@ -114,6 +119,12 @@ model Mountain {
   rules  MountainRule?
   trails Trail[]
 
+  organizers  MountainOrganizer[]
+  officers    OfficerAssignment[]
+  attractions Attraction[]
+  documents   Document[]
+  contents    MountainContent[]
+
   @@map("mountains")
 }
 
@@ -155,6 +166,8 @@ model Trail {
   mountain    Mountain     @relation(fields: [mountainId], references: [id], onDelete: Restrict)
   checkpoints Checkpoint[]
 
+  advisories TrailAdvisory[]
+
   @@index([mountainId])
   @@map("trails")
 }
@@ -170,6 +183,115 @@ model Checkpoint {
 
   trail Trail @relation(fields: [trailId], references: [id], onDelete: Cascade)
 
+  advisories TrailAdvisory[]
+
   @@unique([trailId, orderNo])
   @@map("checkpoints")
+}
+
+enum AdvisoryStatus {
+  open
+  limited
+  closed
+}
+
+enum Severity {
+  info
+  warning
+  danger
+}
+
+enum ContentType {
+  tutorial
+  faq
+  checklist
+  news
+}
+
+model MountainOrganizer {
+  mountainId   String   @map("mountain_id") @db.Uuid
+  organizerId  String   @map("organizer_id") @db.Uuid
+  assignedById String?  @map("assigned_by") @db.Uuid
+  assignedAt   DateTime @default(now()) @map("assigned_at")
+
+  mountain   Mountain @relation(fields: [mountainId], references: [id], onDelete: Restrict)
+  organizer  User     @relation("OrganizerUser", fields: [organizerId], references: [id], onDelete: Restrict)
+  assignedBy User?    @relation("OrganizerAssigner", fields: [assignedById], references: [id])
+
+  @@id([mountainId, organizerId])
+  @@map("mountain_organizers")
+}
+
+model OfficerAssignment {
+  officerId  String @map("officer_id") @db.Uuid
+  mountainId String @map("mountain_id") @db.Uuid
+
+  officer  User     @relation(fields: [officerId], references: [id], onDelete: Restrict)
+  mountain Mountain @relation(fields: [mountainId], references: [id], onDelete: Restrict)
+
+  @@id([officerId, mountainId])
+  @@map("officer_assignments")
+}
+
+model TrailAdvisory {
+  id              String         @id @default(uuid()) @db.Uuid
+  trailId         String         @map("trail_id") @db.Uuid
+  status          AdvisoryStatus
+  maxCheckpointId String?        @map("max_checkpoint_id") @db.Uuid
+  reason          String?        @db.VarChar(200)
+  message         String?
+  severity        Severity       @default(info)
+  validFrom       DateTime       @map("valid_from")
+  validUntil      DateTime?      @map("valid_until")
+  sourceUrl       String?        @map("source_url") @db.VarChar(500)
+  setById         String         @map("set_by") @db.Uuid
+  createdAt       DateTime       @default(now()) @map("created_at")
+
+  trail         Trail       @relation(fields: [trailId], references: [id], onDelete: Restrict)
+  maxCheckpoint Checkpoint? @relation(fields: [maxCheckpointId], references: [id])
+  setBy         User        @relation(fields: [setById], references: [id])
+
+  @@index([trailId, validFrom])
+  @@map("trail_advisories")
+}
+
+model Attraction {
+  id          String   @id @default(uuid()) @db.Uuid
+  mountainId  String   @map("mountain_id") @db.Uuid
+  name        String   @db.VarChar(150)
+  description String?
+  image       String?  @db.VarChar(500)
+  lat         Decimal? @db.Decimal(9, 6)
+  lng         Decimal? @db.Decimal(9, 6)
+
+  mountain Mountain @relation(fields: [mountainId], references: [id], onDelete: Cascade)
+
+  @@map("attractions")
+}
+
+model Document {
+  id         String @id @default(uuid()) @db.Uuid
+  mountainId String @map("mountain_id") @db.Uuid
+  title      String @db.VarChar(200)
+  category   String @db.VarChar(100)
+  fileUrl    String @map("file_url") @db.VarChar(500)
+
+  mountain Mountain @relation(fields: [mountainId], references: [id], onDelete: Cascade)
+
+  @@map("documents")
+}
+
+model MountainContent {
+  id         String      @id @default(uuid()) @db.Uuid
+  mountainId String      @map("mountain_id") @db.Uuid
+  type       ContentType
+  title      String      @db.VarChar(200)
+  body       String
+  sortOrder  Int         @default(0) @map("sort_order")
+  isActive   Boolean     @default(true) @map("is_active")
+
+  mountain Mountain @relation(fields: [mountainId], references: [id], onDelete: Cascade)
+
+  @@index([mountainId, type, sortOrder])
+  @@map("mountain_contents")
 }
