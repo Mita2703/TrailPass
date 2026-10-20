@@ -5,6 +5,8 @@ import { env } from "./config/env";
 import { prisma } from "./lib/prisma";
 import { errorHandler, notFound } from "./middleware/errors";
 import authRoutes from "./modules/auth/auth.routes";
+import mountainRoutes from "./modules/mountains/mountains.routes";
+import trailRoutes from "./modules/trails/trails.routes";
 
 export function createApp() {
   const app = express();
@@ -24,6 +26,8 @@ export function createApp() {
   });
 
   app.use("/api/v1", authRoutes);
+  app.use("/api/v1", mountainRoutes);
+  app.use("/api/v1", trailRoutes);
 
   app.use(notFound);
   app.use(errorHandler);
