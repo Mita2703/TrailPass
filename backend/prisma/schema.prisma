@@ -86,3 +86,90 @@ model ClimberProfile {
   @@index([nik])
   @@map("climber_profiles")
 }
+
+enum Difficulty {
+  easy
+  medium
+  hard
+}
+
+model Mountain {
+  id             String   @id @default(uuid()) @db.Uuid
+  name           String   @db.VarChar(150)
+  slug           String   @unique @db.VarChar(160)
+  province       String   @db.VarChar(100)
+  regency        String   @db.VarChar(100)
+  elevationM     Int      @map("elevation_m")
+  lat            Decimal  @db.Decimal(9, 6)
+  lng            Decimal  @db.Decimal(9, 6)
+  timezone       String   @default("Asia/Jakarta") @db.VarChar(40)
+  description    String?
+  coverImage     String?  @map("cover_image") @db.VarChar(500)
+  managingAgency String?  @map("managing_agency") @db.VarChar(200)
+  officialUrl    String?  @map("official_url") @db.VarChar(500)
+  isActive       Boolean  @default(false) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  rules  MountainRule?
+  trails Trail[]
+
+  @@map("mountains")
+}
+
+model MountainRule {
+  id                     String  @id @default(uuid()) @db.Uuid
+  mountainId             String  @unique @map("mountain_id") @db.Uuid
+  minGroup               Int     @default(1) @map("min_group")
+  maxGroup               Int     @map("max_group")
+  minAge                 Int?    @map("min_age")
+  bookingCutoffDays      Int     @default(0) @map("booking_cutoff_days")
+  holdMinutes            Int     @map("hold_minutes")
+  maxDurationDays        Int     @map("max_duration_days")
+  rescheduleDeadlineDays Int?    @map("reschedule_deadline_days")
+  requireBriefing        Boolean @default(false) @map("require_briefing")
+  extraRules             Json?   @map("extra_rules")
+
+  mountain Mountain @relation(fields: [mountainId], references: [id], onDelete: Restrict)
+
+  @@map("mountain_rules")
+}
+
+model Trail {
+  id             String      @id @default(uuid()) @db.Uuid
+  mountainId     String      @map("mountain_id") @db.Uuid
+  name           String      @db.VarChar(150)
+  distanceKm     Decimal?    @map("distance_km") @db.Decimal(5, 2)
+  estimatedHours Decimal?    @map("estimated_hours") @db.Decimal(4, 1)
+  difficulty     Difficulty?
+  price          Int
+  priceForeign   Int?        @map("price_foreign")
+  extraFees      Json?       @map("extra_fees")
+  queueEnabled   Boolean     @default(true) @map("queue_enabled")
+  queueMaxActive Int         @default(30) @map("queue_max_active")
+  ruleOverrides  Json?       @map("rule_overrides")
+  isActive       Boolean     @default(true) @map("is_active")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  mountain    Mountain     @relation(fields: [mountainId], references: [id], onDelete: Restrict)
+  checkpoints Checkpoint[]
+
+  @@index([mountainId])
+  @@map("trails")
+}
+
+model Checkpoint {
+  id       String   @id @default(uuid()) @db.Uuid
+  trailId  String   @map("trail_id") @db.Uuid
+  name     String   @db.VarChar(150)
+  orderNo  Int      @map("order_no")
+  lat      Decimal? @db.Decimal(9, 6)
+  lng      Decimal? @db.Decimal(9, 6)
+  isSummit Boolean  @default(false) @map("is_summit")
+
+  trail Trail @relation(fields: [trailId], references: [id], onDelete: Cascade)
+
+  @@unique([trailId, orderNo])
+  @@map("checkpoints")
+}
