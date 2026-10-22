@@ -7,6 +7,7 @@ import { errorHandler, notFound } from "./middleware/errors";
 import authRoutes from "./modules/auth/auth.routes";
 import mountainRoutes from "./modules/mountains/mountains.routes";
 import trailRoutes from "./modules/trails/trails.routes";
+import bookingRoutes from "./modules/bookings/bookings.routes";
 
 export function createApp() {
   const app = express();
@@ -28,8 +29,10 @@ export function createApp() {
   app.use("/api/v1", authRoutes);
   app.use("/api/v1", mountainRoutes);
   app.use("/api/v1", trailRoutes);
+  app.use("/api/v1", bookingRoutes);
 
   app.use(notFound);
   app.use(errorHandler);
+  
   return app;
 }

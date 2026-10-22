@@ -10,19 +10,30 @@ export async function getAvailability(trailId: string, month: string) {
   });
   if (!trail) throw new AppError(404, 'Jalur tidak ditemukan', 'NOT_FOUND');
 
-  // month berbentuk "2026-11": ambil dari tanggal 1 sampai sebelum tanggal 1 bulan berikutnya
   const [year, mon] = month.split('-').map(Number);
   const start = new Date(Date.UTC(year, mon - 1, 1));
   const end = new Date(Date.UTC(year, mon, 1));
-
-  const rows = await prisma.trailQuota.findMany({
-    where: { trailId, date: { gte: start, lt: end } },
-    orderBy: { date: 'asc' },
-  });
-
   const now = new Date();
+
+  const [rows, heldRows] = await Promise.all([
+    prisma.trailQuota.findMany({
+      where: { trailId, date: { gte: start, lt: end } },
+      orderBy: { date: 'asc' },
+    }),
+    // Jumlah anggota yang sedang ditahan per tanggal (booking pending yang belum kedaluwarsa)
+    prisma.booking.groupBy({
+      by: ['climbDate'],
+      where: { trailId, climbDate: { gte: start, lt: end }, status: 'pending', expiresAt: { gt: now } },
+      _sum: { memberCount: true },
+    }),
+  ]);
+
+  const heldByDate = new Map(heldRows.map((h) => [h.climbDate.toISOString().slice(0, 10), h._sum.memberCount ?? 0]));
+
   const days = rows.map((r) => {
-    const remaining = Math.max(0, r.totalQuota - r.sold);
+    const date = r.date.toISOString().slice(0, 10);
+    const held = heldByDate.get(date) ?? 0;
+    const remaining = Math.max(0, r.totalQuota - r.sold - held);
 
     let status: DayStatus = 'available';
     if (r.isClosed) status = 'closed';
@@ -31,9 +42,10 @@ export async function getAvailability(trailId: string, month: string) {
     else if (remaining / r.totalQuota <= 0.2) status = 'low';
 
     return {
-      date: r.date.toISOString().slice(0, 10),
+      date,
       total: r.totalQuota,
       sold: r.sold,
+      held,
       remaining,
       status,
       price: r.priceOverride ?? trail.price,

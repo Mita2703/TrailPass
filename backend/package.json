@@ -7,7 +7,8 @@
     "dev": "tsx watch src/server.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "race": "tsx scripts/race-test.ts"
   },
   "keywords": [],
   "author": "",
