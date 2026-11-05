@@ -3,6 +3,8 @@ import { authenticate, requireRole } from '../../middleware/auth';
 import { asyncHandler } from '../../middleware/errors';
 import { bookingIdSchema, createBookingSchema, idempotencyKeySchema } from './bookings.schema';
 import { createHold, getBooking } from './bookings.service';
+import { setMembersSchema } from './members.schema';
+import { setMembers } from './members.service';
 
 const router = Router();
 
@@ -25,6 +27,17 @@ router.get(
   asyncHandler(async (req, res) => {
     const { id } = bookingIdSchema.parse(req.params);
     res.json({ data: await getBooking(req.user!.id, id), error: null });
+  }),
+);
+
+router.put(
+  '/bookings/:id/members',
+  authenticate,
+  requireRole('climber'),
+  asyncHandler(async (req, res) => {
+    const { id } = bookingIdSchema.parse(req.params);
+    const input = setMembersSchema.parse(req.body);
+    res.json({ data: await setMembers(req.user!.id, id, input), error: null });
   }),
 );
 
