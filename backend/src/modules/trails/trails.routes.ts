@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { asyncHandler } from '../../middleware/errors';
 import { getAvailability } from './trails.service';
+import { getCurrentAdvisory } from '../admin/advisories.service';
 
 const router = Router();
 
@@ -20,6 +21,18 @@ router.get(
     const { month } = querySchema.parse(req.query);
     const target = month ?? new Date().toISOString().slice(0, 7); // bulan ini bila kosong
     res.json({ data: await getAvailability(id, target), error: null });
+  }),
+);
+
+router.get(
+  '/trails/:id/status',
+  asyncHandler(async (req, res) => {
+    const { id } = idSchema.parse(req.params);
+    const advisory = await getCurrentAdvisory(id);
+    res.json({
+      data: advisory ?? { status: 'open', severity: 'info', message: 'Jalur beroperasi normal' },
+      error: null,
+    });
   }),
 );
 

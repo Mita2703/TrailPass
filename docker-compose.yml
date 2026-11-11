@@ -11,6 +11,11 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trailpass -d trailpass"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
@@ -20,6 +25,49 @@ services:
       - "6379:6379"
     volumes:
       - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: trailpass-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: "postgresql://trailpass:trailpass@postgres:5432/trailpass?schema=public"
+      REDIS_URL: "redis://redis:6379"
+      JWT_SECRET: "65aa09cf3e5b846183d0265202e9a68961fd8c5aeba5cb664ac1c69480012a5d"
+      JWT_EXPIRES_IN: "8h"
+      QR_SIGNING_SECRET: "84d322555baa84157ac89f24560f4fe94dfdd3432ef83c20a7328ab86e008b34"
+      FRONTEND_URL: "http://localhost:3000"
+      SEED_DEFAULT_PASSWORD: "trailpass2703"
+      MIDTRANS_SERVER_KEY: "SB-Mid-server-mwArcF4YukozoC_EqnFg-sue"
+      MIDTRANS_CLIENT_KEY: "Mid-client-9KRVqArSR8WVhr02"
+      MIDTRANS_IS_PRODUCTION: "false"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: trailpass-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
 
 volumes:
   pgdata:

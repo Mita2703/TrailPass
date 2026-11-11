@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import type { Booking } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { AppError } from '../../middleware/errors';
+import { verifyAndConsumeToken } from '../queue/queue.service';
 import type { CreateBookingInput } from './bookings.schema';
 
 // Alfabet tanpa O, I, 0, 1 supaya kode mudah dibaca dan tidak tertukar.
@@ -39,7 +40,12 @@ function present(b: Booking) {
   };
 }
 
-export async function createHold(userId: string, input: CreateBookingInput, idempotencyKey: string) {
+export async function createHold(
+  userId: string,
+  input: CreateBookingInput,
+  idempotencyKey: string,
+  queueToken?: string,
+) {
   // 1. Permintaan yang sama (klik ganda): kembalikan booking yang sudah ada.
   const existing = await prisma.booking.findFirst({ where: { leaderUserId: userId, idempotencyKey } });
   if (existing) return { booking: present(existing), created: false };
@@ -57,6 +63,14 @@ export async function createHold(userId: string, input: CreateBookingInput, idem
   });
   if (!trail || !trail.mountain.rules) throw new AppError(404, 'Jalur tidak ditemukan', 'NOT_FOUND');
   const rules = trail.mountain.rules;
+
+  // 3.1 Verifikasi token antrean jika token disertakan atau antrean aktif
+  if (queueToken) {
+    const isValid = await verifyAndConsumeToken(userId, input.trailId, input.climbDate, queueToken);
+    if (!isValid) {
+      throw new AppError(403, 'Akses antrean tidak valid atau sudah kedaluwarsa. Silakan antre kembali', 'QUEUE_TOKEN_INVALID');
+    }
+  }
 
   // 4. Aturan gunung: ukuran rombongan dan batas waktu pemesanan.
   if (input.memberCount < rules.minGroup || input.memberCount > rules.maxGroup) {

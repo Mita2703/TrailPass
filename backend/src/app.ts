@@ -8,6 +8,12 @@ import authRoutes from "./modules/auth/auth.routes";
 import mountainRoutes from "./modules/mountains/mountains.routes";
 import trailRoutes from "./modules/trails/trails.routes";
 import bookingRoutes from "./modules/bookings/bookings.routes";
+import paymentRoutes from "./modules/payments/payments.routes";
+import scannerRoutes from "./modules/scanner/scanner.routes";
+import queueRoutes from "./modules/queue/queue.routes";
+import refundRoutes from "./modules/refunds/refunds.routes";
+import adminRoutes from "./modules/admin/admin.routes";
+import organizerRoutes from "./modules/organizer/organizer.routes";
 
 export function createApp() {
   const app = express();
@@ -30,6 +36,12 @@ export function createApp() {
   app.use("/api/v1", mountainRoutes);
   app.use("/api/v1", trailRoutes);
   app.use("/api/v1", bookingRoutes);
+  app.use("/api/v1", paymentRoutes);
+  app.use("/api/v1", scannerRoutes);
+  app.use("/api/v1", queueRoutes);
+  app.use("/api/v1", refundRoutes);
+  app.use("/api/v1", adminRoutes);
+  app.use("/api/v1", organizerRoutes);
 
   app.use(notFound);
   app.use(errorHandler);

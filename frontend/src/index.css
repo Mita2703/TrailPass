@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    @apply bg-offwhite text-charcoal antialiased;
+    font-family: "Plus Jakarta Sans", Inter, system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 { @apply font-bold tracking-tight; }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #F8F9F5; }
+  ::-webkit-scrollbar-thumb { background: #c8d5cf; border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: #89928C; }
+}
+
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-[#173F35] hover:bg-[#285C4A]
+           text-white font-semibold text-sm px-5 py-2.5 rounded-xl
+           transition-all duration-200 shadow-sm active:scale-[0.98] select-none;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 bg-white hover:bg-[#F8F9F5]
+           text-[#173F35] font-semibold text-sm px-5 py-2.5 rounded-xl
+           border border-gray-200 hover:border-gray-300
+           transition-all duration-200 shadow-sm active:scale-[0.98] select-none;
+  }
+  .btn-lime {
+    @apply inline-flex items-center justify-center gap-2 bg-[#B8D986] hover:bg-[#a5ca6e]
+           text-[#173F35] font-bold text-sm px-5 py-2.5 rounded-xl
+           transition-all duration-200 shadow-sm active:scale-[0.98] select-none;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 text-[#173F35] font-semibold text-sm
+           px-4 py-2 rounded-xl hover:bg-forest-50 transition-colors duration-200 select-none;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-white rounded-2xl shadow-card border border-black/5 overflow-hidden;
+  }
+  .card-hover {
+    @apply card transition-all duration-300 hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+
+  /* Section */
+  .section { @apply py-16 md:py-24; }
+  .container-main { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
+
+  /* Status badges */
+  .badge-open {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold
+           bg-emerald-50 text-emerald-700 border border-emerald-200;
+  }
+  .badge-limited {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold
+           bg-amber-50 text-amber-700 border border-amber-200;
+  }
+  .badge-closed {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold
+           bg-red-50 text-red-700 border border-red-200;
+  }
+
+  /* Form inputs */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-charcoal text-sm
+           placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-emerald-600/20
+           focus:border-[#285C4A] transition-colors;
+  }
+
+  /* Tab navigation */
+  .tab-active {
+    @apply text-[#173F35] border-b-2 border-[#173F35] font-semibold;
+  }
+  .tab-inactive {
+    @apply text-muted hover:text-charcoal border-b-2 border-transparent font-medium transition-colors;
+  }
+
+  /* Sidebar dashboard */
+  .sidebar-link {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
+           text-[#89928C] hover:text-[#173F35] hover:bg-forest-50 transition-all duration-150;
+  }
+  .sidebar-link-active {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold
+           text-[#173F35] bg-[#B8D986]/30 border border-[#B8D986]/40;
+  }
+
+  /* Section label */
+  .section-label {
+    @apply inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest
+           text-[#285C4A] bg-[#B8D986]/25 px-3 py-1 rounded-full;
+  }
+
+  /* Difficulty pill */
+  .difficulty-easy { @apply px-2 py-0.5 rounded-md text-xs font-semibold bg-green-100 text-green-700; }
+  .difficulty-medium { @apply px-2 py-0.5 rounded-md text-xs font-semibold bg-yellow-100 text-yellow-700; }
+  .difficulty-hard { @apply px-2 py-0.5 rounded-md text-xs font-semibold bg-orange-100 text-orange-700; }
+  .difficulty-extreme { @apply px-2 py-0.5 rounded-md text-xs font-semibold bg-red-100 text-red-700; }
+}

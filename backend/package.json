@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "db:seed": "tsx prisma/seed.ts",
-    "race": "tsx scripts/race-test.ts"
+    "race": "tsx scripts/race-test.ts",
+    "test:concurrency": "tsx scripts/simulate-high-concurrency.ts"
   },
   "keywords": [],
   "author": "",

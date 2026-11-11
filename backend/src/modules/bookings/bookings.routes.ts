@@ -15,7 +15,8 @@ router.post(
   asyncHandler(async (req, res) => {
     const input = createBookingSchema.parse(req.body);
     const key = idempotencyKeySchema.parse(req.header('Idempotency-Key'));
-    const { booking, created } = await createHold(req.user!.id, input, key);
+    const queueToken = req.header('X-Queue-Token') ?? (req.body as any)?.accessToken;
+    const { booking, created } = await createHold(req.user!.id, input, key, queueToken);
     res.status(created ? 201 : 200).json({ data: booking, error: null });
   }),
 );

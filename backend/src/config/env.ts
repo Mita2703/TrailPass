@@ -10,8 +10,14 @@ const schema = z.object({
   REDIS_URL: z.string().default("redis://localhost:6379"),
   JWT_SECRET: z.string().min(16, "JWT_SECRET minimal 16 karakter"),
   JWT_EXPIRES_IN: z.string().default("15m"),
-  QR_SIGNING_SECRET: z.string().min(16).optional(),
+  QR_SIGNING_SECRET: z.string().min(16).default("trailpass-qr-signing-secret-default-key-32"),
   FRONTEND_URL: z.string().default("http://localhost:5173"),
+  MIDTRANS_SERVER_KEY: z.string().default("SB-Mid-server-mwArcF4YukozoC_EqnFg-sue"),
+  MIDTRANS_CLIENT_KEY: z.string().default("Mid-client-9KRVqArSR8WVhr02"),
+  MIDTRANS_IS_PRODUCTION: z
+    .string()
+    .transform((val) => val === "true")
+    .default("false"),
 });
 
 const parsed = schema.safeParse(process.env);
