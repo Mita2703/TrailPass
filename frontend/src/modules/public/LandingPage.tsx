@@ -17,7 +17,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-[85vh] lg:min-h-[90vh] flex flex-col justify-start pt-[76px] sm:pt-[82px] pb-12 sm:pb-16 overflow-hidden">
+    <section className="relative min-h-[85vh] lg:min-h-[88vh] flex flex-col justify-start pt-[76px] sm:pt-[82px] pb-6 sm:pb-8 overflow-hidden">
       {/* BG Image */}
       <div className="absolute inset-0 z-0">
         <img
@@ -155,9 +155,9 @@ const MountainCard: React.FC<{ mountain: typeof MOUNTAINS[0] }> = ({ mountain })
 
 // ── Destinations section ─────────────────────────────────
 const DestinationsSection: React.FC = () => (
-  <section className="section bg-offwhite">
+  <section className="pt-6 sm:pt-8 pb-10 sm:pb-12 bg-offwhite">
     <div className="container-main">
-      <div className="flex items-end justify-between gap-4 mb-10">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
         <SectionHeader
           label="Destinasi Gunung"
           title="Temukan Gunung Impianmu."

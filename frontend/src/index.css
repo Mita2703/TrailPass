@@ -52,7 +52,7 @@
   }
 
   /* Section */
-  .section { @apply py-16 md:py-24; }
+  .section { @apply py-10 md:py-14; }
   .container-main { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
 
   /* Status badges */

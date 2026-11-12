@@ -50,11 +50,11 @@ export const DifficultyBadge: React.FC<{ level: string }> = ({ level }) => {
 };
 
 // ── Section Header ────────────────────────────────────────
-export const SectionHeader: React.FC<{ label?: string; title: string; subtitle?: string; center?: boolean }> = ({ label, title, subtitle, center }) => (
-  <div className={`mb-10 ${center ? 'text-center' : ''}`}>
-    {label && <div className={`section-label mb-3 ${center ? 'mx-auto w-fit' : ''}`}>{label}</div>}
-    <h2 className="text-3xl md:text-4xl font-extrabold text-charcoal leading-tight mb-3">{title}</h2>
-    {subtitle && <p className="text-muted text-lg max-w-2xl leading-relaxed" style={center ? { marginLeft: 'auto', marginRight: 'auto' } : {}}>{subtitle}</p>}
+export const SectionHeader: React.FC<{ label?: string; title: string; subtitle?: string; center?: boolean; className?: string }> = ({ label, title, subtitle, center, className = '' }) => (
+  <div className={`${center ? 'text-center' : ''} ${className}`}>
+    {label && <div className={`section-label mb-2 ${center ? 'mx-auto w-fit' : ''}`}>{label}</div>}
+    <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-charcoal leading-tight mb-1.5">{title}</h2>
+    {subtitle && <p className="text-muted text-sm sm:text-base max-w-2xl leading-relaxed" style={center ? { marginLeft: 'auto', marginRight: 'auto' } : {}}>{subtitle}</p>}
   </div>
 );
 
