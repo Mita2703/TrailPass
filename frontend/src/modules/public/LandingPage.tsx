@@ -17,7 +17,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-[92vh] flex items-end pb-16 overflow-hidden">
+    <section className="relative min-h-[95vh] flex flex-col justify-center pt-28 sm:pt-36 pb-16 sm:pb-20 overflow-hidden">
       {/* BG Image */}
       <div className="absolute inset-0 z-0">
         <img
@@ -25,25 +25,29 @@ const Hero: React.FC = () => {
           alt="Pegunungan Indonesia"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0d1f18] via-[#0d1f18]/55 to-[#0d1f18]/15" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0d1f18]/50 via-transparent to-transparent" />
+        {/* Top gradient for navbar and header contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#06170f]/90 via-[#06170f]/40 to-transparent" />
+        {/* Bottom gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0d1f18] via-[#0d1f18]/65 to-transparent" />
+        {/* Left side gradient for copy readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#06170f]/80 via-[#06170f]/30 to-transparent" />
       </div>
 
       <div className="relative z-10 container-main w-full">
         <div className="max-w-2xl">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-[#B8D986]/20 border border-[#B8D986]/40 rounded-full px-3.5 py-1.5 mb-6 backdrop-blur-sm">
-            <span className="w-1.5 h-1.5 bg-[#B8D986] rounded-full animate-pulse" />
+          <div className="inline-flex items-center gap-2 bg-[#B8D986]/20 border border-[#B8D986]/40 rounded-full px-4 py-1.5 mb-5 backdrop-blur-md shadow-sm">
+            <span className="w-2 h-2 bg-[#B8D986] rounded-full animate-pulse" />
             <span className="text-[#B8D986] text-xs font-bold uppercase tracking-wider">Platform Pendakian Indonesia</span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.08] tracking-tight mb-5">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.08] tracking-tight mb-5 drop-shadow-sm">
             Temukan Gunung,<br />
             <span className="text-[#B8D986]">Tentukan</span> Petualanganmu.
           </h1>
 
-          <p className="text-white/70 text-lg leading-relaxed mb-8 max-w-lg">
+          <p className="text-white/85 text-base sm:text-lg leading-relaxed mb-8 max-w-lg font-normal drop-shadow-sm">
             Jelajahi berbagai gunung di Indonesia, pantau kuota pendakian secara real-time, dan pesan e-tiket resmi dalam satu platform.
           </p>
 

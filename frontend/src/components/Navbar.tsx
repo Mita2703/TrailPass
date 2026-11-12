@@ -28,7 +28,9 @@ export const Navbar: React.FC = () => {
   ];
 
   const textColor = isTransparent ? 'text-white' : 'text-charcoal';
-  const bg = isTransparent ? 'bg-transparent' : 'bg-white/95 backdrop-blur-md shadow-nav border-b border-black/5';
+  const bg = isTransparent
+    ? 'bg-[#0a1c15]/85 backdrop-blur-md shadow-sm border-b border-white/10'
+    : 'bg-white/95 backdrop-blur-md shadow-nav border-b border-black/5';
 
   return (
     <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${bg}`}>
@@ -36,16 +38,16 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center h-16 gap-6">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors
-              ${isTransparent ? 'bg-white/15 group-hover:bg-white/25' : 'bg-[#173F35] group-hover:bg-[#285C4A]'}`}>
-              <Mountain className={`w-5 h-5 ${isTransparent ? 'text-white' : 'text-white'}`} />
+            <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105 shadow-sm
+              ${isTransparent ? 'bg-[#B8D986] text-[#173F35]' : 'bg-[#173F35] text-white'}`}>
+              <Mountain className={`w-5 h-5 ${isTransparent ? 'text-[#173F35]' : 'text-white'}`} />
             </div>
             <div>
               <span className={`text-lg font-extrabold tracking-tight ${isTransparent ? 'text-white' : 'text-[#173F35]'}`}>
                 TrailPass
               </span>
-              <div className={`text-[9px] font-semibold uppercase tracking-widest hidden sm:block leading-none
-                ${isTransparent ? 'text-white/60' : 'text-muted'}`}>
+              <div className={`text-[10px] font-bold uppercase tracking-widest hidden sm:block leading-none
+                ${isTransparent ? 'text-[#B8D986]' : 'text-[#285C4A]'}`}>
                 Satu Tiket, Semua Jalur
               </div>
             </div>
@@ -61,11 +63,13 @@ export const Navbar: React.FC = () => {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors
+                  className={`px-3.5 py-1.5 text-sm font-semibold rounded-xl transition-all
                     ${isTransparent
-                      ? 'text-white/85 hover:text-white hover:bg-white/10'
+                      ? isActive
+                        ? 'text-white bg-white/15'
+                        : 'text-white/85 hover:text-white hover:bg-white/10'
                       : isActive
-                        ? 'text-[#173F35] bg-[#B8D986]/25 font-semibold'
+                        ? 'text-[#173F35] bg-[#B8D986]/30'
                         : 'text-muted hover:text-charcoal hover:bg-black/5'
                     }`}
                 >
@@ -81,7 +85,7 @@ export const Navbar: React.FC = () => {
               to="/masuk"
               className={`px-4 py-2 text-sm font-semibold rounded-xl transition-colors
                 ${isTransparent
-                  ? 'text-white hover:bg-white/10'
+                  ? 'text-white hover:bg-white/15'
                   : 'text-[#173F35] hover:bg-[#173F35]/8'
                 }`}
             >
@@ -89,10 +93,10 @@ export const Navbar: React.FC = () => {
             </Link>
             <Link
               to="/daftar"
-              className={`px-4 py-2 text-sm font-bold rounded-xl transition-all border
+              className={`px-4 py-2 text-sm font-bold rounded-xl transition-all shadow-sm
                 ${isTransparent
-                  ? 'bg-[#B8D986] text-[#173F35] hover:bg-[#a5ca6e] border-transparent shadow-sm'
-                  : 'bg-[#173F35] text-white hover:bg-[#285C4A] border-transparent shadow-sm'
+                  ? 'bg-[#B8D986] hover:bg-[#a5ca6e] text-[#173F35]'
+                  : 'bg-[#173F35] hover:bg-[#285C4A] text-white'
                 }`}
             >
               Daftar
