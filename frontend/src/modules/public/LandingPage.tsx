@@ -17,7 +17,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-[95vh] flex flex-col justify-center pt-28 sm:pt-36 pb-16 sm:pb-20 overflow-hidden">
+    <section className="relative min-h-[85vh] lg:min-h-[90vh] flex flex-col justify-start pt-[76px] sm:pt-[82px] pb-12 sm:pb-16 overflow-hidden">
       {/* BG Image */}
       <div className="absolute inset-0 z-0">
         <img
@@ -36,18 +36,18 @@ const Hero: React.FC = () => {
       <div className="relative z-10 container-main w-full">
         <div className="max-w-2xl">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-[#B8D986]/20 border border-[#B8D986]/40 rounded-full px-4 py-1.5 mb-5 backdrop-blur-md shadow-sm">
+          <div className="inline-flex items-center gap-2 bg-[#B8D986]/20 border border-[#B8D986]/40 rounded-full px-3.5 py-1 mb-3.5 backdrop-blur-md shadow-sm">
             <span className="w-2 h-2 bg-[#B8D986] rounded-full animate-pulse" />
             <span className="text-[#B8D986] text-xs font-bold uppercase tracking-wider">Platform Pendakian Indonesia</span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.08] tracking-tight mb-5 drop-shadow-sm">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.08] tracking-tight mb-3.5 drop-shadow-sm">
             Temukan Gunung,<br />
             <span className="text-[#B8D986]">Tentukan</span> Petualanganmu.
           </h1>
 
-          <p className="text-white/85 text-base sm:text-lg leading-relaxed mb-8 max-w-lg font-normal drop-shadow-sm">
+          <p className="text-white/85 text-base sm:text-lg leading-relaxed mb-5 max-w-lg font-normal drop-shadow-sm">
             Jelajahi berbagai gunung di Indonesia, pantau kuota pendakian secara real-time, dan pesan e-tiket resmi dalam satu platform.
           </p>
 
