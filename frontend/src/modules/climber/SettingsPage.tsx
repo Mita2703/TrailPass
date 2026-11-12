@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Settings, Lock, Shield, Bell, Eye, EyeOff, LogOut,
-  CheckCircle2, Key, Smartphone
+  Shield, Bell, Eye, EyeOff, LogOut,
+  CheckCircle2, Key
 } from 'lucide-react';
 
 export const SettingsPage: React.FC = () => {
@@ -46,7 +46,7 @@ export const SettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-6 max-w-3xl animate-in fade-in duration-300">
       {/* Header */}
       <div className="pb-4 border-b border-black/5">
         <h1 className="text-xl font-extrabold text-charcoal">Pengaturan Akun & Keamanan</h1>

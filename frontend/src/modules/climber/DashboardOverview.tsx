@@ -1,16 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Mountain, Ticket, Calendar, MapPin, ArrowRight, CheckCircle2,
-  Clock, ShieldCheck, ChevronRight, Compass, Award, QrCode
+  Mountain, Ticket, Calendar, CheckCircle2,
+  Clock, ChevronRight, Compass, Award, QrCode
 } from 'lucide-react';
 import { DEMO_PROFILE, DEMO_BOOKINGS } from '../../data/index';
-import { BookingStatusBadge } from '../../components/ui';
 
 export const DashboardOverview: React.FC = () => {
   const activeTicket = DEMO_BOOKINGS.find((b) => b.status === 'PAID');
   const pendingBooking = DEMO_BOOKINGS.find((b) => b.status === 'PENDING_PAYMENT');
-  const completedHikes = DEMO_BOOKINGS.filter((b) => b.status === 'COMPLETED');
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
@@ -36,7 +34,7 @@ export const DashboardOverview: React.FC = () => {
               Jelajahi Gunung
             </Link>
             <Link
-              to="/dashboard/tiket"
+              to="/pendaki/tiket"
               className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl border border-white/20 transition-all backdrop-blur-sm"
             >
               <Ticket className="w-4 h-4" />
@@ -83,7 +81,7 @@ export const DashboardOverview: React.FC = () => {
               <Ticket className="w-4 h-4 text-[#173F35]" />
               Tiket Pendakian Aktif
             </h2>
-            <Link to="/dashboard/tiket" className="text-xs font-bold text-[#173F35] hover:underline flex items-center gap-1">
+            <Link to="/pendaki/tiket" className="text-xs font-bold text-[#173F35] hover:underline flex items-center gap-1">
               Semua Tiket <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -122,7 +120,7 @@ export const DashboardOverview: React.FC = () => {
                 </div>
                 <div className="flex sm:justify-end">
                   <Link
-                    to="/dashboard/tiket"
+                    to="/pendaki/tiket"
                     className="btn-lime text-xs py-2 px-4 w-full sm:w-auto"
                   >
                     <QrCode className="w-3.5 h-3.5" />
@@ -159,7 +157,7 @@ export const DashboardOverview: React.FC = () => {
                 </div>
               </div>
               <Link
-                to={`/dashboard/pemesanan`}
+                to={`/pendaki/pemesanan`}
                 className="btn-primary text-xs py-2 px-3 bg-amber-800 hover:bg-amber-900 border-none shrink-0"
               >
                 Bayar Sekarang
@@ -175,7 +173,7 @@ export const DashboardOverview: React.FC = () => {
               <Award className="w-4 h-4 text-[#173F35]" />
               My Hiking Journey
             </h2>
-            <Link to="/dashboard/riwayat" className="text-xs font-bold text-[#173F35] hover:underline">
+            <Link to="/pendaki/riwayat" className="text-xs font-bold text-[#173F35] hover:underline">
               Jurnal Lengkap
             </Link>
           </div>
@@ -211,7 +209,7 @@ export const DashboardOverview: React.FC = () => {
             </div>
 
             <Link
-              to="/dashboard/riwayat"
+              to="/pendaki/riwayat"
               className="w-full btn-secondary text-xs py-2.5 justify-center"
             >
               Buka Timeline & Galeri Perjalanan

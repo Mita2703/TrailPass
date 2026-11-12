@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  ShoppingBag, Calendar, Users, Mountain, ArrowRight,
-  ExternalLink, Search, Clock, CreditCard, X, QrCode
+  ShoppingBag, Calendar, Users, Mountain,
+  CreditCard, X, QrCode
 } from 'lucide-react';
 import { DEMO_BOOKINGS, Booking } from '../../data/index';
 import { BookingStatusBadge } from '../../components/ui';
@@ -28,7 +28,7 @@ export const BookingsPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-black/5">
         <div>
@@ -134,7 +134,7 @@ export const BookingsPage: React.FC = () => {
 
                   {booking.status === 'PAID' && (
                     <Link
-                      to="/dashboard/tiket"
+                      to="/pendaki/tiket"
                       className="btn-lime text-xs py-1.5 px-3"
                     >
                       <QrCode className="w-3.5 h-3.5" />
@@ -181,56 +181,54 @@ export const BookingsPage: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-muted">Destinasi:</span>
-                  <span className="font-bold text-charcoal">{selectedBooking.mountain}</span>
+                  <span className="font-semibold text-charcoal">{selectedBooking.mountain}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted">Jalur Pendakian:</span>
-                  <span className="font-bold text-charcoal">{selectedBooking.trail}</span>
+                  <span className="text-muted">Jalur Registrasi:</span>
+                  <span className="font-semibold text-charcoal">{selectedBooking.trail}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted">Tanggal Naik:</span>
-                  <span className="font-bold text-charcoal">{selectedBooking.date}</span>
+                  <span className="text-muted">Jadwal Masuk:</span>
+                  <span className="font-semibold text-charcoal">{selectedBooking.date}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted">Tanggal Turun:</span>
-                  <span className="font-bold text-charcoal">{selectedBooking.returnDate}</span>
+                  <span className="text-muted">Rencana Keluar:</span>
+                  <span className="font-semibold text-charcoal">{selectedBooking.returnDate}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted">Ketua Rombongan:</span>
-                  <span className="font-bold text-charcoal">{selectedBooking.leader.name}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted">NIK Ketua:</span>
-                  <span className="font-bold text-charcoal">{selectedBooking.leader.idNumber}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted">Jumlah Pendaki:</span>
-                  <span className="font-bold text-charcoal">{selectedBooking.hikers} Orang</span>
-                </div>
-                <div className="flex justify-between items-center pt-2 border-t border-black/5">
-                  <span className="text-muted font-bold">Total Pembayaran:</span>
-                  <span className="text-sm font-extrabold text-[#173F35]">
-                    Rp {selectedBooking.total.toLocaleString('id-ID')}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
                   <span className="text-muted">Status:</span>
                   <BookingStatusBadge status={selectedBooking.status} />
                 </div>
               </div>
 
+              <div className="pt-3 border-t border-black/5">
+                <h4 className="font-bold text-charcoal mb-2">Data Ketua Rombongan:</h4>
+                <div className="p-3 rounded-xl bg-offwhite space-y-1">
+                  <p className="font-semibold text-charcoal">{selectedBooking.leader.name}</p>
+                  <p className="text-muted font-mono">{selectedBooking.leader.idNumber}</p>
+                  <p className="text-muted">{selectedBooking.leader.phone || '081234567890'}</p>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-black/5 flex justify-between items-center">
+                <span className="font-bold text-charcoal">Total Tagihan:</span>
+                <span className="text-base font-extrabold text-[#173F35]">
+                  Rp {selectedBooking.total.toLocaleString('id-ID')}
+                </span>
+              </div>
+
               <div className="pt-4 flex gap-2">
                 <button
+                  type="button"
                   onClick={() => setSelectedBooking(null)}
-                  className="btn-secondary flex-1 py-2"
+                  className="btn-secondary w-full justify-center text-xs py-2.5"
                 >
                   Tutup
                 </button>
                 {selectedBooking.status === 'PAID' && (
                   <Link
-                    to="/dashboard/tiket"
-                    className="btn-lime flex-1 py-2 text-center"
-                    onClick={() => setSelectedBooking(null)}
+                    to="/pendaki/tiket"
+                    className="btn-lime w-full justify-center text-xs py-2.5"
                   >
                     Buka E-Ticket
                   </Link>

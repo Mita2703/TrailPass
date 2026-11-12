@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Users, Plus, Trash2, Edit2, Shield, Eye, EyeOff,
-  UserCheck, AlertCircle, X, Check
+  Plus, Trash2, Edit2, Shield, Eye, EyeOff, X
 } from 'lucide-react';
 
 interface SavedHiker {
@@ -122,7 +121,7 @@ export const HikersDataPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-black/5">
         <div>

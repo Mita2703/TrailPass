@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Mountain, Filter, MapPin, ArrowRight } from 'lucide-react';
-import { MOUNTAINS } from '../data/index';
-import { StatusBadge, SectionHeader } from '../components/ui';
-import { Footer } from '../components/Footer';
+import { Search, Mountain, MapPin, ArrowRight } from 'lucide-react';
+import { MOUNTAINS } from '../../data/index';
+import { StatusBadge } from '../../components/ui';
+import { Footer } from '../../components/Footer';
 
 type FilterStatus = 'ALL' | 'OPEN' | 'LIMITED' | 'CLOSED';
 

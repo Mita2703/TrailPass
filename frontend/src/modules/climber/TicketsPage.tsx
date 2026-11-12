@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Ticket, QrCode, Download, Eye, Calendar, Users, Mountain,
-  ShieldCheck, MapPin, Printer, CheckCircle2, AlertCircle, X
+  Ticket, Download, Eye, Calendar, Users, Mountain,
+  ShieldCheck, CheckCircle2, X
 } from 'lucide-react';
 import { DEMO_BOOKINGS, Booking } from '../../data/index';
 
 // Realistic SVG QR Code Component
-const QRCodeTicketSVG: React.FC<{ code: string }> = ({ code }) => (
+const QRCodeTicketSVG: React.FC<{ code: string }> = () => (
   <svg viewBox="0 0 140 140" className="w-full h-full" fill="none">
     {/* Finder Top-Left */}
     <rect x="6" y="6" width="36" height="36" rx="4" fill="#173F35" />
@@ -60,7 +60,7 @@ export const TicketsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-black/5">
         <div>

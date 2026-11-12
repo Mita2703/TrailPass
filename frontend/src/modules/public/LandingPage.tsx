@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ArrowRight, Mountain, MapPin, Clock, Users, Star, ChevronDown, TrendingUp, Shield, QrCode, Zap } from 'lucide-react';
-import { MOUNTAINS } from '../data/index';
-import { StatusBadge, SectionHeader } from '../components/ui';
-import { MonthlyQuotaSection } from '../components/MonthlyQuotaSection';
-import { Footer } from '../components/Footer';
+import { Search, ArrowRight, Mountain, MapPin, ChevronDown, TrendingUp, Shield, QrCode, Zap } from 'lucide-react';
+import { MOUNTAINS } from '../../data/index';
+import { StatusBadge, SectionHeader } from '../../components/ui';
+import { MonthlyQuotaSection } from '../../components/MonthlyQuotaSection';
+import { Footer } from '../../components/Footer';
 
 // ── Hero ─────────────────────────────────────────────────
 const Hero: React.FC = () => {
@@ -76,7 +76,7 @@ const Hero: React.FC = () => {
           </div>
         </div>
 
-        {/* Scroll hint */}
+        {/* Floating Quick Mountain Shortcut */}
         <div className="absolute bottom-0 right-0 hidden lg:flex items-end gap-6 pb-2">
           {MOUNTAINS.slice(0, 3).map((m) => (
             <Link key={m.id} to={`/gunung/${m.slug}`}
@@ -219,7 +219,6 @@ const HowItWorksSection: React.FC = () => {
 const FeaturesSection: React.FC = () => {
   const features = [
     { icon: <TrendingUp className="w-5 h-5" />, title: 'Monitoring Kuota Real-Time', desc: 'Pantau ketersediaan kuota per jalur dan tanggal secara akurat, diperbarui langsung dari balai pengelola.' },
-    { icon: <Users className="w-5 h-5" />, title: 'Antrean Virtual', desc: 'Sistem antrean adil berbasis Redis memastikan setiap pendaki mendapat kesempatan yang sama saat peak season.' },
     { icon: <Shield className="w-5 h-5" />, title: 'Pembayaran Aman via Midtrans', desc: 'Berbagai pilihan metode pembayaran: QRIS, Transfer Bank, e-Wallet, Kartu Kredit — semua terjamin aman.' },
     { icon: <QrCode className="w-5 h-5" />, title: 'E-Ticket QR Code', desc: 'Tiket digital terenkripsi dengan QR Code. Dapat disimpan offline dan dipindai cepat di pos pendakian.' },
     { icon: <Mountain className="w-5 h-5" />, title: 'Multi-Gunung, Satu Platform', desc: 'Jelajahi dan pesan tiket berbagai gunung di Indonesia tanpa perlu berpindah-pindah website.' },

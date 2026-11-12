@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
-  User, Mail, Phone, Calendar, Shield, MapPin, CheckCircle2,
-  Lock, Save, Edit3, Eye, EyeOff
+  CheckCircle2, Shield, Save, Edit3, Eye, EyeOff
 } from 'lucide-react';
 import { DEMO_PROFILE } from '../../data/index';
 
@@ -32,7 +31,7 @@ export const ProfilePage: React.FC = () => {
     : '';
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-6 max-w-3xl animate-in fade-in duration-300">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-black/5">
         <div>

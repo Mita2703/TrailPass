@@ -7,7 +7,7 @@ export const Navbar: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
-  const isDashboard = location.pathname.startsWith('/dashboard');
+  const isDashboard = location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/pendaki');
   const isTransparent = location.pathname === '/' && !scrolled;
 
   useEffect(() => {

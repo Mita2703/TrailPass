@@ -62,7 +62,7 @@ export interface Booking {
   total: number;
   status: 'PENDING_PAYMENT' | 'PROCESSING' | 'PAID' | 'CANCELLED' | 'COMPLETED';
   createdAt: string;
-  leader: { name: string; idNumber: string };
+  leader: { name: string; idNumber: string; phone?: string };
 }
 
 export interface HikerProfile {

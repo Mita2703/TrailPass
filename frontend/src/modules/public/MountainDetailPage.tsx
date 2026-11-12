@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
-  Mountain, MapPin, Clock, ArrowRight, ChevronRight,
-  CheckCircle, AlertTriangle, XCircle, Users, Ruler,
+  Mountain, MapPin, ArrowRight, ChevronRight,
+  CheckCircle, AlertTriangle, XCircle,
   Info, List, Layers, AlertCircle, BookOpen, ChevronDown,
-  Star, Camera
+  Camera
 } from 'lucide-react';
-import { MOUNTAINS } from '../data/index';
-import { StatusBadge, DifficultyBadge, QuotaBar, SectionHeader } from '../components/ui';
-import { Footer } from '../components/Footer';
+import { MOUNTAINS } from '../../data/index';
+import { StatusBadge, DifficultyBadge, QuotaBar } from '../../components/ui';
+import { Footer } from '../../components/Footer';
 
 type TabId = 'overview' | 'jalur' | 'fasilitas' | 'persyaratan' | 'peraturan' | 'panduan';
 
 export const MountainDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
@@ -212,7 +211,7 @@ export const MountainDetailPage: React.FC = () => {
                         <button className="btn-secondary flex-1 text-xs py-2.5">Detail Jalur</button>
                         {trail.status !== 'CLOSED' ? (
                           <Link
-                            to={`/booking/${mountain.slug}/${trail.id}`}
+                            to={`/pendaki/booking/${mountain.slug}/${trail.id}`}
                             className="btn-primary flex-1 text-center text-xs py-2.5"
                           >
                             Booking Sekarang
@@ -234,9 +233,9 @@ export const MountainDetailPage: React.FC = () => {
               <div className="space-y-5">
                 <h2 className="text-xl font-extrabold text-charcoal">Persyaratan Pendakian</h2>
                 {[
-                  { title: 'Dokumen yang Diperlukan', icon: <List className="w-5 h-5" />, items: mountain.requirements.documents, color: 'blue' },
-                  { title: 'Peralatan Wajib', icon: <Mountain className="w-5 h-5" />, items: mountain.requirements.equipment, color: 'green' },
-                  { title: 'Kondisi Kesehatan', icon: <CheckCircle className="w-5 h-5" />, items: mountain.requirements.health, color: 'amber' },
+                  { title: 'Dokumen yang Diperlukan', icon: <List className="w-5 h-5" />, items: mountain.requirements.documents },
+                  { title: 'Peralatan Wajib', icon: <Mountain className="w-5 h-5" />, items: mountain.requirements.equipment },
+                  { title: 'Kondisi Kesehatan', icon: <CheckCircle className="w-5 h-5" />, items: mountain.requirements.health },
                 ].map((section) => (
                   <div key={section.title} className="card p-6">
                     <h3 className="font-bold text-charcoal mb-4 flex items-center gap-2 text-[#173F35]">
@@ -339,7 +338,6 @@ export const MountainDetailPage: React.FC = () => {
 
           {/* Sidebar */}
           <div className="space-y-5">
-            {/* Quick booking */}
             <div className="card p-5 sticky top-32">
               <h3 className="font-extrabold text-charcoal mb-1">{mountain.name}</h3>
               <div className="flex items-center gap-1 text-muted text-xs mb-4">

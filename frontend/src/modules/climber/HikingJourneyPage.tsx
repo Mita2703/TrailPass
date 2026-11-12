@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
-  Map, Award, Calendar, Mountain, CheckCircle2, Camera,
-  Plus, Filter, Image, ChevronRight, Share2, ShieldCheck
+  Award, Calendar, CheckCircle2, Camera,
+  Plus, Image, ShieldCheck
 } from 'lucide-react';
 import { DEMO_PROFILE } from '../../data/index';
 
@@ -83,7 +82,7 @@ export const HikingJourneyPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-300">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-black/5">
         <div>

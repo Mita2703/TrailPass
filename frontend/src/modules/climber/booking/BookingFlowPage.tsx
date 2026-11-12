@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
-  Mountain, Calendar, Users, FileText, CheckCircle2,
-  Clock, CreditCard, Ticket, ArrowRight, ArrowLeft,
-  AlertCircle, ShieldCheck, Download, ExternalLink, QrCode
+  Mountain, Users,
+  Clock, CreditCard, ArrowRight, ArrowLeft,
+  CheckCircle2, Download, QrCode
 } from 'lucide-react';
-import { MOUNTAINS, Mountain as MountainType, Trail } from '../data/index';
-import { StatusBadge, QuotaBar } from '../components/ui';
+import { MOUNTAINS } from '../../../data/index';
+import { QuotaBar } from '../../../components/ui';
 
 interface HikerData {
   name: string;
@@ -17,7 +17,6 @@ interface HikerData {
 
 export const BookingFlowPage: React.FC = () => {
   const { mountainSlug, trailId } = useParams<{ mountainSlug: string; trailId: string }>();
-  const navigate = useNavigate();
 
   // Find mountain and trail
   const mountain = MOUNTAINS.find((m) => m.slug === mountainSlug) || MOUNTAINS[0];
@@ -43,7 +42,6 @@ export const BookingFlowPage: React.FC = () => {
   // Payment State
   const [paymentMethod, setPaymentMethod] = useState<'QRIS' | 'BCA_VA' | 'MANDIRI_VA' | 'GOPAY'>('QRIS');
   const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false);
-  const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false);
 
   // Update hikers array when count changes
   useEffect(() => {
@@ -105,13 +103,12 @@ export const BookingFlowPage: React.FC = () => {
     setIsProcessingPayment(true);
     setTimeout(() => {
       setIsProcessingPayment(false);
-      setPaymentSuccess(true);
       setCurrentStep(8); // To E-Ticket
     }, 1500);
   };
 
   return (
-    <div className="min-h-screen bg-offwhite py-20 px-4 sm:px-6">
+    <div className="min-h-screen bg-offwhite py-12 px-4 sm:px-6 animate-in fade-in">
       <div className="max-w-3xl mx-auto">
         {/* Top Header */}
         <div className="flex items-center justify-between mb-6">
@@ -621,7 +618,7 @@ export const BookingFlowPage: React.FC = () => {
                   <Download className="w-3.5 h-3.5" /> Unduh Tiket PDF
                 </button>
                 <Link
-                  to="/dashboard/tiket"
+                  to="/pendaki/tiket"
                   className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5"
                 >
                   Buka di Dashboard <ArrowRight className="w-3.5 h-3.5" />
